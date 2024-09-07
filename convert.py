@@ -1,39 +1,53 @@
 import numpy as np
 from PIL import Image
-import louis
+from skimage.filters import threshold_local
 
 def image_to_braille(image_path, output_path, width=40, height=9):
     # Open the image and convert to grayscale
     img = Image.open(image_path).convert('L')
     
-    # Resize the image to fit the Braille display dimensions
-    img = img.resize((width * 2, height * 3))
+    # Resize the image to fit the Braille display dimensions (each cell is 2x3)
+    img = img.resize((width * 2, height * 3), Image.LANCZOS)
     
     # Convert the image to a numpy array
     img_array = np.array(img)
-    
-    # Create a 2D list to store Braille characters
-    braille_matrix = [[0 for _ in range(width)] for _ in range(height)]
-    
-    # Convert image to Braille dots
-    for y in range(height):
-        for x in range(width):
+
+    # # Apply adaptive thresholding
+    # threshold = threshold_local(img_array, block_size=11, offset=10)
+    # img_array = img_array > threshold
+
+    # Inverse the image (True becomes False and vice versa)
+    # img_array = ~img_array
+
+    # Format for BRF
+    brf_text = ''
+    for y in range(0, height * 3, 3):
+        for x in range(0, width * 2, 2):
+            # Get the 2x3 subarray for this Braille cell
+            cell = img_array[y:y+3, x:x+2]
+            
+            # Convert the cell to a Braille pattern
             dot_pattern = 0
             for i in range(3):
                 for j in range(2):
-                    if img_array[y*3 + i, x*2 + j] < 128:  # Threshold for black/white
-                        dot_pattern |= 1 << (i * 2 + j)
+                    if cell[i, j]:
+                        dot_pattern |= 1 << (3*j + i)
             
-            braille_matrix[y][x] = dot_pattern
-
-    # Convert Braille dot patterns to Unicode Braille characters
-    braille_text = '\n'.join(''.join(chr(0x2800 + cell) for cell in row) for row in braille_matrix)
-    
-    # Convert to BRF format
-    brf_text = louis.translate(['braille-patterns.cti'], braille_text, mode=louis.dotsIO)[0]
+            # Convert dot pattern to Braille character
+            braille_char = dot_pattern_to_ascii_braille(dot_pattern)            
+            brf_text += braille_char
+        
+        brf_text += '\n'
     
     # Write to file
-    with open(output_path, 'w', encoding='utf-8') as f:
+    with open(output_path, 'w', encoding='ascii', errors='replace') as f:
         f.write(brf_text)
+    
+    print(f"BRF content (first 500 characters): {brf_text[:500]}")
+    print(f"File written: {output_path}")
 
-image_to_braille('test.jpg', 'test_output.brf')
+def dot_pattern_to_ascii_braille(pattern):
+    return chr((pattern ^ 0x40) + 0x20)
+
+# Example usage
+image_to_braille('test.jpg', 'test5_output.brf')
