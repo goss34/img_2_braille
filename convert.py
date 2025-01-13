@@ -50,4 +50,4 @@ def dot_pattern_to_ascii_braille(pattern):
     return chr((pattern ^ 0x40) + 0x20)
 
 # Example usage
-image_to_braille('test.jpg', 'test5_output.brf')
+image_to_braille('square.jpg', 'square.brf')

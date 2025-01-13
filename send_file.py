@@ -97,7 +97,7 @@ def main():
     uploader = CanuteFlashAirUploader()
     
     # Adjust these values for your setup
-    filename = 'test5_output.brf'
+    filename = 'square.brf'
     mount_path = '/Volumes/NO NAME'  # Update this to match your SD card's mount point
     
     uploader.upload_file(filename, mount_path)
