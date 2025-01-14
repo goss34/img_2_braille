@@ -9,3 +9,8 @@
 6. Using the ```send_file.py``` script run the same command to send the updated contents via the same file name
 7. In order to see updates, the Canute must be rebooted or ejecting and re-inserting the SD card.
 8. Selecting the same ```square.brf``` file in the Canute will show the updated contents and should now be a circle.
+
+- 1/14 Meeting
+# Utilize two files A and B, update one at a time, see if that makes a difference
+# New firmware maybe allows for API access?
+# Also try writing to the canute_state.txt to manually change the filename to change the location of what file is being read.
