@@ -75,7 +75,6 @@ def dot_pattern_to_ascii_braille(pattern):
 # Example usage
 if __name__ == "__main__":
     print("Starting conversion...")
-    image_to_braille('circle.jpg', 'circle.brf')
+    image_to_braille('star.jpg', 'star.brf')
     print("\n" + "="*50 + "\n")
-    image_to_braille('square.jpg', 'square.brf')
     print("\nConversion complete.")

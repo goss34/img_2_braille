@@ -146,7 +146,7 @@ class CanuteFlashAirUploader:
 
 def main():
     uploader = CanuteFlashAirUploader()
-    filename = 'circle.brf'  # Update this to match your file
+    filename = 'star.brf'  # Update this to match your file
     uploader.upload_file(filename)
 
 if __name__ == "__main__":
