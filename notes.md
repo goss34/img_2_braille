@@ -29,3 +29,9 @@
     - Will need to use a router
     - Keep the original aspect ratio and resolution of the Canute for the vitual display
     - Live updates, refresh or use an embeded application hosted via the Jetson to refresh in real-time
+
+# 3/11 Meeting
+- Develop a dynamic refresh based on how much data actually needs to be refreshed
+- Tunnel vision theory:
+    - Middle of Canute doesnt need to be refreshed as frequently as edges
+    - Trees next to car are faster versus the road ahead
