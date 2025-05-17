@@ -1,0 +1,274 @@
+`configure' configures BRLTTY 6.7 to adapt to many kinds of systems.
+
+Usage: ./configure [OPTION]... [VAR=VALUE]...
+
+To assign environment variables (e.g., CC, CFLAGS...), specify them as
+VAR=VALUE.  See below for descriptions of some of the useful variables.
+
+Defaults for the options are specified in brackets.
+
+Configuration:
+  -h, --help              display this help and exit
+      --help=short        display options specific to this package
+      --help=recursive    display the short help of all the included packages
+  -V, --version           display version information and exit
+  -q, --quiet, --silent   do not print `checking ...' messages
+      --cache-file=FILE   cache test results in FILE [disabled]
+  -C, --config-cache      alias for `--cache-file=config.cache'
+  -n, --no-create         do not create output files
+      --srcdir=DIR        find the sources in DIR [configure dir or `..']
+
+Installation directories:
+  --prefix=PREFIX         install architecture-independent files in PREFIX
+                          []
+  --exec-prefix=EPREFIX   install architecture-dependent files in EPREFIX
+                          [PREFIX]
+
+By default, `make install' will install all the files in
+`/bin', `/lib' etc.  You can specify
+an installation prefix other than `' using `--prefix',
+for instance `--prefix=$HOME'.
+
+For better control, use the options below.
+
+Fine tuning of the installation directories:
+  --bindir=DIR            user executables [EPREFIX/bin]
+  --sbindir=DIR           system admin executables [EPREFIX/sbin]
+  --libexecdir=DIR        program executables [EPREFIX/libexec]
+  --sysconfdir=DIR        read-only single-machine data [PREFIX/etc]
+  --sharedstatedir=DIR    modifiable architecture-independent data [PREFIX/com]
+  --localstatedir=DIR     modifiable single-machine data [PREFIX/var]
+  --runstatedir=DIR       modifiable per-process data [LOCALSTATEDIR/run]
+  --libdir=DIR            object code libraries [EPREFIX/lib]
+  --includedir=DIR        C header files [PREFIX/include]
+  --oldincludedir=DIR     C header files for non-gcc [/usr/include]
+  --datarootdir=DIR       read-only arch.-independent data root [PREFIX/share]
+  --datadir=DIR           read-only architecture-independent data [DATAROOTDIR]
+  --infodir=DIR           info documentation [DATAROOTDIR/info]
+  --localedir=DIR         locale-dependent data [DATAROOTDIR/locale]
+  --mandir=DIR            man documentation [DATAROOTDIR/man]
+  --docdir=DIR            documentation root [DATAROOTDIR/doc/brltty]
+  --htmldir=DIR           html documentation [DOCDIR]
+  --dvidir=DIR            dvi documentation [DOCDIR]
+  --pdfdir=DIR            pdf documentation [DOCDIR]
+  --psdir=DIR             ps documentation [DOCDIR]
+
+System types:
+  --build=BUILD     configure for building on BUILD [guessed]
+  --host=HOST       cross-compile to build programs to run on HOST [BUILD]
+  --target=TARGET   configure for building compilers for TARGET [HOST]
+
+Optional Features:
+  --disable-option-checking  ignore unrecognized --enable/--with options
+  --disable-FEATURE       do not include FEATURE (same as --enable-FEATURE=no)
+  --enable-FEATURE[=ARG]  include FEATURE [ARG=yes]
+  --enable-standalone-programs  statically linked executables
+  --disable-i18n                support for internationalization
+  --disable-icu                 support for Unicode-based internationalization
+  --disable-iconv               support for character encoding conversion
+  --disable-polkit              support for the Polkit authorization manager
+  --disable-api                 the application programming interface
+  --disable-emacs-bindings      Emacs bindings for BrlAPI
+  --disable-java-bindings       Java bindings for BrlAPI
+  --disable-lisp-bindings       Lisp bindings for BrlAPI
+  --disable-lua-bindings        Lua bindings for BrlAPI
+  --disable-ocaml-bindings      OCaml bindings for BrlAPI
+  --disable-python-bindings     Python bindings for BrlAPI
+  --disable-tcl-bindings        Tcl bindings for BrlAPI
+  --enable-api-fuzzing          fuzzing the application programming interface
+  --disable-x                   support for X11
+  --disable-expat               support for XML parsing (CLDR)
+  --disable-liblouis            support for LibLouis-based contracted braille
+  --disable-gpm                 mouse tracking via GPM
+  --disable-speech-support      support for speech synthesizers and
+                                text-to-speech engines
+  --enable-relocatable-install  installation using paths relative to the
+                                program directory
+  --disable-stripping           stripping of executables and shared objects
+                                during installation
+
+Optional Packages:
+  --with-PACKAGE[=ARG]    use PACKAGE [ARG=yes]
+  --without-PACKAGE       do not use PACKAGE (same as --with-PACKAGE=no)
+  --with-execute-root=DIRECTORY where the package is to be anchored at
+                                run-time
+  --with-install-root=DIRECTORY where to install the package
+  --with-configuration-file=FILE
+                                name of configuration file
+  --with-program-directory=DIRECTORY
+                                path to directory containing executables
+  --with-helpers-directory=DIRECTORY
+                                path to directory containing helper commands
+  --with-drivers-directory=DIRECTORY
+                                path to directory containing drivers
+  --with-updatable-directory=DIRECTORY
+                                path to directory which contains files that
+                                can be updated
+  --with-writable-directory=DIRECTORY
+                                path to directory which can be written to
+  --with-tables-directory=DIRECTORY
+                                path to directory containing data files
+  --with-manpage-directory=DIRECTORY
+                                path to directory containing manual pages
+  --with-include-directory=DIRECTORY
+                                path to directory containing header files
+  --with-init-path=FILE         path to real init program
+  --with-privilege-parameters=PLATFORM:NAME=VALUE... (comma-separated)
+                                default parameters for the privilege
+                                establishment stage
+  --with-stderr-path=FILE       path to standard error log file
+  --with-api-parameters=NAME=VALUE... (comma-separated)
+                                default parameters for the application
+                                programming interface
+  --with-api-socket-path=PATH   where local sockets for teh api are stored
+  --with-curses=PACKAGE         which curses package to use (ncursesw
+                                pdcursesw ncurses pdcursesu curses pdcurses)
+  --with-gui-toolkit=PACKAGE    which gui toolkit package to use (Xaw Xaw3d
+                                neXtaw XawPlus Xm)
+  --with-system-package=PACKAGE which base system package to use
+  --with-pgmpath-package=PACKAGE
+                                which program path package to use
+  --with-pgmprivs-package=PACKAGE
+                                which program privileges package to use
+  --with-service-package=PACKAGE
+                                which system service package to use
+  --with-params-package=PACKAGE which boot parameters package to use
+  --with-dynld-package=PACKAGE  which dynamic loading package to use
+  --with-rgx-package=PACKAGE    which regular expression package to use
+  --with-charset-package=PACKAGE
+                                which character set package to use
+  --with-hostcmd-package=PACKAGE
+                                which host command package to use
+  --with-mntpt-package=PACKAGE  which mount point package to use
+  --with-mntfs-package=PACKAGE  which mount file system package to use
+  --with-kbd-package=PACKAGE    which keyboard package to use
+  --with-bell-package=PACKAGE   which console bell package to use
+  --with-leds-package=PACKAGE   which keyboard LEDs package to use
+  --with-beep-package=PACKAGE   which beeper package to use
+  --with-pcm-package=PACKAGE    which PCm package to use
+  --with-midi-package=PACKAGE   which MIDI package to use
+  --with-fm-package=PACKAGE     which FM package to use
+  --with-serial-package=PACKAGE which serial I/O package to use
+  --with-usb-package=PACKAGE    which USB I/O package to use
+  --with-bluetooth-package=PACKAGE
+                                which Bluetooth I/O package to use
+  --with-hid-package=PACKAGE    which Human Interface Device I/O package to
+                                use
+  --with-ports-package=PACKAGE  which I/O ports package to use
+  --with-libbraille=DIRECTORY   where the Libbraille package is installed
+  --with-braille-driver=DRIVER  braille driver(s) to build in
+                                - al  Alva
+                                - at  Albatross
+                                - ba  BrlAPI
+                                - bc  BrailComm
+                                - bd  Braudi
+                                - bl  BrailleLite
+                                - bm  Baum
+                                - bn  BrailleNote
+                                - cb  CombiBraille
+                                - ce  Cebra
+                                - cn  Canute
+                                - dp  DotPad
+                                - ec  EcoBraille
+                                - eu  EuroBraille
+                                - fa  FrankAudiodata
+                                - fs  FreedomScientific
+                                - hd  Hedo
+                                - hm  HIMS
+                                - ht  HandyTech
+                                - hw  HumanWare
+                                - ir  Iris
+                                - ic  Inceptor
+                                - lb  Libbraille
+                                - lt  LogText
+                                - mb  MultiBraille
+                                - md  MDV
+                                - mm  BrailleMemo
+                                - mn  MiniBraille
+                                - mt  Metec
+                                - np  NinePoint
+                                - pg  Pegasus
+                                - pm  Papenmeier
+                                - sk  Seika
+                                - tn  TechniBraille
+                                - ts  TSI
+                                - tt  TTY
+                                - vd  VideoBraille
+                                - vo  Voyager
+                                - vr  Virtual
+                                - vs  VisioBraille
+                                - xw  XWindow
+                                - bg  B2G
+  --with-braille-parameters=DRIVER:NAME=VALUE... (comma-separated)
+                                default parameters for the braille driver(s)
+  --with-braille-device=DEVICE  default braille device
+  --with-text-table=NAME        built-in text table
+  --with-contraction-table=NAME built-in contraction table
+  --with-attributes-table=NAME  built-in attributes table
+  --with-espeak_ng=DIRECTORY    where the eSpeak-NG package is installed
+  --with-espeak=DIRECTORY       where the eSpeak package is installed
+  --with-flite=DIRECTORY        where the FestivalLite package is installed
+  --with-flite-language=LANGUAGE
+                                the FestivalLite language to use
+  --with-flite-lexicon=LEXICON  the FestivalLite lexicon to use
+  --with-flite-voice=VOICE      the FestivalLite voice to use
+  --with-mikropuhe=DIRECTORY    where the Mikropuhe package is installed
+  --with-speechd=DIRECTORY      where the speech-dispatcher package is
+                                installed
+  --with-swift=DIRECTORY        where the Swift package is installed
+  --with-theta=DIRECTORY        where the Theta package is installed
+  --with-speech-driver=DRIVER   speech driver(s) to build in
+                                - al  Alva
+                                - bl  BrailleLite
+                                - cb  CombiBraille
+                                - en  eSpeak-NG
+                                - es  eSpeak
+                                - fl  FestivalLite
+                                - fv  Festival
+                                - gs  GenericSay
+                                - mp  Mikropuhe
+                                - sd  SpeechDispatcher
+                                - sw  Swift
+                                - th  Theta
+                                - vv  ViaVoice
+                                - xs  ExternalSpeech
+                                - an  Android
+  --with-speech-parameters=DRIVER:NAME=VALUE... (comma-separated)
+                                default parameters for the speech driver(s)
+  --with-screen-driver=DRIVER   screen driver(s) to build in
+                                - an  Android
+                                - lx  Linux
+                                - hd  Hurd
+                                - wn  Windows
+                                - pb  PcBios
+                                - gb  Grub
+                                - fv  FileViewer
+                                - sc  Screen
+                                - em  TerminalEmulator
+                                - as  AtSpi
+                                - a2  AtSpi2
+  --with-screen-parameters=DRIVER:NAME=VALUE... (comma-separated)
+                                default parameters for the screen driver(s)
+
+Some influential environment variables:
+  CC          C compiler command
+  CFLAGS      C compiler flags
+  LDFLAGS     linker flags, e.g. -L<lib dir> if you have libraries in a
+              nonstandard directory <lib dir>
+  LIBS        libraries to pass to the linker, e.g. -l<library>
+  CPPFLAGS    (Objective) C/C++ preprocessor flags, e.g. -I<include dir> if
+              you have headers in a nonstandard directory <include dir>
+  CXX         C++ compiler command
+  CXXFLAGS    C++ compiler flags
+  PKG_CONFIG  path to pkg-config utility
+  PKG_CONFIG_PATH
+              directories to add to pkg-config's search path
+  PKG_CONFIG_LIBDIR
+              path overriding pkg-config's built-in search path
+  CPP         C preprocessor
+
+Use these variables to override the choices made by `configure' or to help
+it to find libraries and programs with nonstandard names/locations.
+
+Report bugs to <BRLTTY@brltty.app>.
+BRLTTY home page: <https://brltty.app/>.

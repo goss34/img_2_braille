@@ -1,0 +1,449 @@
+    1  sudo apt install vscode
+    2  sudo apt update
+    3  sudo apt upgrade
+    4  sudo apt install firefox
+    5  firefox
+    6  cd
+    7  ls
+    8  cd jps
+    9  ls
+   10  cd ..
+   11  cd Documents/
+   12  ls
+   13  git clone https://github.com/goss34/img_2_braille.git
+   14  cd img_2_braille/
+   15  git checkout BRLTTY
+   16  cd..
+   17  cd ..
+   18  git clone https://github.com/brltty/brltty.git
+   19  cd brltty/
+   20  git checkout master
+   21  ./autogen 
+   22  sudo Tools/reqpkgs -i
+   23  ./configure 
+   24  sudo make -s
+   25  sudo reboot now
+   26  jtop
+   27  sudo apt install jtop
+   28  cat /etc/nvpmodel.conf
+   29  sudo systemctl disable nvzramconfig
+   30  sudo fallocate -l 16G /ssd/16GB.swap
+   31  LSBLK
+   32  lsblk
+   33  sudo apt install neofetch
+   34  htop
+   35  sudo apt install htop
+   36  sudo fallocate -l 16G /mnt/16GB.swap
+   37  sudo mkswap /mnt/16GB.swap
+   38  sudo swapon /mnt/16GB.swap
+   39  lsblk
+   40  /mnt/16GB.swap  none  swap  sw 0  0
+   41  sudo apt install vim
+   42  sudo vim /etc/fstab
+   43  free -m
+   44  swapon --show
+   45  sudo echo '/mnt/16GB.swap  none  swap  sw 0  0' >> /etc/fstab
+   46  echo '/mnt/16GB.swap  none  swap  sw 0  0' >> /etc/fstab
+   47  sudo -i
+   48  swapon --show
+   49  free -m
+   50  sudo nvpmodel -q
+   51  sudo nvpmodel -m 0
+   52  sudo nvpmodel -q
+   53  nvpmodel
+   54  sudo nvpmodel -m 1
+   55  sudo nvpmodel -q
+   56  sudo nvpmodel -m 2
+   57  sudo nvpmodel -q
+   58  sudo nvpmodel -m 3
+   59  sudo nvpmodel -m 0
+   60  sudo nvpmodel -m 1
+   61  sudo nvpmodel -m 3
+   62  sudo nvpmodel -m 2
+   63  sudo usermod -aG docker $USER
+   64  sudo vim /etc/docker/daemon.json 
+   65  sudo systemctl restart docker
+   66  sudo docker info | grep 'Default Runtime
+   67  sudo docker info | grep 'Default Runtime'
+   68  git config user.name Avery Goss
+   69  cd Documents/
+   70  cd img_2_braille/
+   71  git config user.name
+   72  git config user.name Avery Goss
+   73  git config user.email averygoss2@gmail.com
+   74  sudo reboot now
+   75  sudo shutdown now
+   76  ./run-brltty -b ba -x a2
+   77  ./run-brltty -b ba -x a2 -n
+   78  sudo ./run-brltty -b ba -x a2 -n
+   79  cd /var/lib/
+   80  cd brltty/
+   81  ls
+   82  sudo chmod ugo=rwx,o+t /var/lib/brltty
+   83  cd ..
+   84  cd BrlAPI/
+   85  ls
+   86  sudo chmod ugo=rwx,o+t /var/lib/BrlAPI/
+   87  ls -l /bin/sh
+   88  sudo spkg-reconfigure dash
+   89  sudo dpkg-reconfigure dash
+   90  ls -l /bin/sh
+   91  cat /etc/brlapi.key 
+   92  sudo cat /etc/brlapi.key 
+   93  cd
+   94  cd Documents/
+   95  cd brltty/
+   96  ./run-brltty -b ba -x a2 -n
+   97  sudo ./run-brltty -b ba -x a2 -n
+   98  ./run-brltty -b ba -x a2 -n
+   99  ./run-brltty -b ba -x lx -n
+  100  sudo ./run-brltty -b ba -x lx -n
+  101  clear
+  102  ./run-brltty -b ba -x a2 -n
+  103  sudo ./run-brltty -b ba -x a2 -n
+  104  clear
+  105  sudo chown -R root:root lib/
+  106  sudo chown -R root:root Tables/
+  107  sudo chmod -R 755 lib/
+  108  sudo chmod -R 755 Tables/
+  109  sudo killall brltty
+  110  sudo rm -f /var/lib/BrlAPI/.0
+  111  sudo ./run-brltty -b ba -x a2 -n
+  112  ./run-brltty -b ba -x a2 -n
+  113  lsusb
+  114  clear
+  115  ./run-brltty -b ba -x a2 -n
+  116  ./run-brltty -b ba
+  117  ./run-brltty -b ba -n
+  118  clear
+  119  . brltty-config.sh
+  120  ./run-brltty -b ba -x a2 -n
+  121  lxsession-edit
+  122  ./run-brltty -b ba -x a2 -n
+  123  ls /var/lib/BrlAPI/
+  124  ls
+  125  ls /var/lib/BrlAPI/
+  126  sudo apt update
+  127  sudo apt upgrade
+  128  cd Documents/
+  129  ls
+  130  cd brltty/
+  131  ls
+  132  lsusb
+  133  ls -a
+  134  brltty -v
+  135  which brltty
+  136  sudo apt remove brltty 
+  137  sudo apt install gawk
+  138  clear
+  139  ls
+  140  sudo ./run-brltty -b cn -n
+  141  ./autogen 
+  142  clear
+  143  sudo apt install tclsh
+  144  sudo ./autogen 
+  145  ./configure
+  146  make
+  147  sudo make
+  148  sudo ./run-brltty -b cn -n
+  149  ./configure --with-braille-driver=all
+  150  ./configure --with-braille-driver=cn --with-braille-device=usb
+  151  make clean
+  152  sudo make clean
+  153  sudo make distclean
+  154  sudo ./configure --with-braille-driver=cn --with-braille-device=usb --with-screen-driver=as --without-speech-driver --without-bluetooth-package --disable-speech-support --disable-pcm-support --disable-midi-support -disable-fm-support
+  155  sudo apt install atspi
+  156  sudo apt install atspi2
+  157  sudo apt install at-spi
+  158  sudo apt install at-spi2
+  159  sudo apt install at-spi-2
+  160  sudo apt install at-spi2-core
+  161  sudo ./configure --with-braille-driver=cn --with-braille-device=usb --with-screen-driver=a2 --without-speech-driver --without-bluetooth-package --disable-speech-support --disable-pcm-support --disable-midi-support -disable-fm-support
+  162  ./configure help
+  163  sudo ./configure help
+  164  ./configure --help
+  165  sudo ./configure --with-braille-driver=cn,ba --with-braille-device=usb --with-screen-driver=a2,lx --without-speech-driver --without-bluetooth-package --disable-speech-support
+  166  sudo make
+  167  sudo ./run-brltty -b cn -n
+  168  ls
+  169  ./run-brltty -b cn -n
+  170  sudo make clean && sudo make distclean
+  171  sudo ./autogen 
+  172  sudo ./configure --with-braille-driver=cn,ba --with-braille-device=usb --with-screen-driver=a2,lx --without-speech-driver --without-bluetooth-package --disable-speech-support
+  173  sudo make
+  174  chmod +x run-brltty 
+  175  sudo ./run-brltty -b cn -n
+  176  ls
+  177  cat run-brltty 
+  178  ls
+  179  cd Programs/
+  180  ks
+  181  ls
+  182  cat brltty.c
+  183  clear
+  184  cd ..
+  185  ls
+  186  cat run-command 
+  187  cn,ba --with-braille-device=usb --with-screen-driver=a2,lx --without-speech-driver --without-bluetooth-package --disable-speech-suppor
+  188  clear
+  189  sudo make clean
+  190  sudo make distclean
+  191  cd ..
+  192  sudo rm -rf brltty/
+  193  git clone https://github.com/brltty/brltty.git
+  194  cd brltty/
+  195  git checkout master
+  196  sudo ./autogen
+  197  sudo Tools/reqpkgs -i
+  198  sudo ./configure --with-braille-driver=cn,ba --with-braille-device=usb --with-screen-driver=a2,lx --without-speech-driver --without-bluetooth-package --disable-speech-support
+  199  sudo make
+  200  ./run-brltty 
+  201  run-brltty
+  202  ./run-xbrlapi 
+  203  ./run-brltty 
+  204  cd Programs/
+  205  ls
+  206  gcc brltty.c
+  207  cd ..
+  208  ls
+  209  cd B
+  210  cd Build/
+  211  ls
+  212  chmod +x mk-prologue.sh 
+  213  ./mk-prologue.sh 
+  214  cd ..
+  215  cd Programs/
+  216  ls
+  217  cd ..
+  218  cd Build/
+  219  cat mk-prologue.sh 
+  220  sudo ./mk-
+  221  sudo ./mk-prologue.sh 
+  222  cd ..
+  223  ls
+  224  sudo make clean && sudo make distclean
+  225  sudo ./configure 
+  226  sudo make
+  227  sudo ./run-brltty -b cn -n
+  228  chmod +x run-brltty 
+  229  ./run-brltty -b cn -n
+  230  ./run-brltty -b cn -d usb -n
+  231  sudo pkill brltty
+  232  cd /var/lib/BrlAPI/.0
+  233  cd /var/lib/BrlAPI/
+  234  ls
+  235  cd 
+  236  cd Documents/brltty/
+  237  ./run-brltty -b cn -d usb -n
+  238  sudo ./run-brltty -b cn -d usb -n
+  239  HTOP
+  240  hto
+  241  htop
+  242  chmod +x brltty-mkuser 
+  243  ./brltty-mkuser 
+  244  ./brltty-mkuser -U
+  245  ./brltty-mkuser -U mercer
+  246  ./brltty-mkuser -N mercer
+  247  ./brltty-mkuser -E mercer
+  248  chmod +x apitest.sh 
+  249  ./apitest.sh 
+  250  ./run-brltty -b cn -x usb -n
+  251  ./run-brltty -b cn -d usb -n
+  252  sudo ./run-brltty -b cn -d usb -n
+  253  clear
+  254  ./run-brltty -b cn -d usb -n
+  255  sudo ./run-brltty -b cn -d usb -n
+  256  clear
+  257  ./run-brltty -b cn -d usb -n
+  258  clear
+  259  sudo killall brltty
+  260  sudo killall brlapi
+  261  grep brlapi /etc/group
+  262  sudo groupadd brlapi
+  263  sudo usermod -a -G brlapi root
+  264  sudo usermod -a -G brlapi $USER
+  265  groups root
+  266  ./run-brltty -b cn -d usb -n
+  267  ls /var/lib/BrlAPI/
+  268  ls -a /var/lib/BrlAPI/
+  269  ./run-brltty -b cn -d usb -x a2 -n
+  270  clear
+  271  sudo killall brltty
+  272  sudo rm -f /var/lib/BrlAPI/.0
+  273  sudo groupadd brlapi
+  274  sudo usermod -a -G brlapi,input,tty,dialout,root,audio,pulse-access $USER
+  275  sudo newgrp brlapi
+  276  sudo apt-get install libcap2-bin
+  277  sudo setcap cap_sys_admin,cap_sys_tty_config,cap_mknod,cap_setgid+ep ./brltty
+  278  ./run-brltty -b cn -d usb -n
+  279  sudo ./run-brltty -b cn -d usb -n
+  280  sudo apt install python3-brlapi
+  281  sudo apt install libbrlapi
+  282  sudo apt install libbrlapi0.8
+  283  ./run-brltty -b cn -d usb -n
+  284  sudo ./run-brltty -b cn -d usb -n
+  285  sudo apt install python3-louis
+  286  sudo apt install python3-xlib
+  287  sudo apt install python3-brlapi
+  288  ./run-brltty -b cn -d usb -n
+  289  ./run-brltty -b ba -x a2 -n
+  290  ./run-brltty -b ba -x a2 -n
+  291  ./run-brltty -b ba -x as -n
+  292  ./run-brltty -b ba -x lx -n
+  293  ./run-brltty -b ba -x a2 -n
+  294  mercer@mercer-jetson:~/Documents/brltty$ ./run-brltty -b cn -d usb: -n
+  295  BRLTTY 6.7 rev BRLTTY-6.7-129-gfa8b77d7+ [https://brltty.app/]
+  296  brltty: can't isolate namespaces
+  297  brltty: executing as the invoking user: mercer
+  298  brltty: can't set supplementary groups
+  299  brltty: group not joined: 0(root)
+  300  brltty: group not joined: 5(tty)
+  301  brltty: group not joined: 20(dialout)
+  302  brltty: group not joined: 101(input)
+  303  brltty: group not joined: 126(pulse-access)
+  304  brltty: required capability not granted: cap_sys_admin (for injecting input characters typed on a braille device)
+  305  brltty: required capability not granted: cap_sys_tty_config (for playing alert tunes via the built-in PC speaker)
+  306  brltty: required capability not granted: cap_mknod (for creating needed but missing special device files)
+  307  brltty: BrlAPI Server: release 0.8.6
+  308  brltty: cannot contain device files: /run/brltty
+  309  /home/mercer/Documents/brltty/Tables/Contraction/en_US.ctb: line 21: include: command not found
+  310  brltty: Speech Driver: no [NoSpeech]
+  311  brltty: Braille Driver: cn [Canute]
+  312  brltty: can't open beep device: /dev/tty0: Permission denied
+  313  brltty: cannot contain device files: /run/brltty
+  314  brltty: cannot contain device files: /run/brltty
+  315  brltty: cannot contain device files: /run/brltty
+  316  brltty: cannot contain device files: /run/brltty
+  317  brltty: cannot contain device files: /run/brltty
+  318  brltty: cannot contain device files: /run/brltty
+  319  brltty: cannot contain device files: /run/brltty
+  320  brltty: cannot contain device files: /run/brltty
+  321  brltty: cannot contain device files: /run/brltty
+  322  brltty: cannot contain device files: /run/brltty
+  323  brltty: cannot contain device files: /run/brltty
+  324  brltty: cannot contain device files: /run/brltty
+  325  brltty: cannot contain device files: /run/brltty
+  326  brltty: cannot contain device files: /run/brltty
+  327  brltty: cannot contain device files: /run/brltty
+  328  brltty: polkit_authority_check_authorization_sync error: GDBus.Error:org.freedesktop.PolicyKit1.Error.Failed: Action org.a11y.brlapi.write-display is not registered
+  329  brltty: polkit_authority_check_authorization_sync error: GDBus.Error:org.freedesktop.PolicyKit1.Error.Failed: Action org.a11y.brlapi.write-display is not registered
+  330  brltty: polkit_authority_check_authorization_sync error: GDBus.Error:org.freedesktop.PolicyKit1.Error.Failed: Action org.a11y.brlapi.write-display i
+  331  ./run-brltty -b ba -x a2 -n
+  332  lsusb
+  333  clear
+  334  ./run-brltty -b ba -x a2 -n
+  335  systemctl status ModemManager
+  336  lsusb
+  337  cd /usr/share/polkit-1/actions/
+  338  ls
+  339  cat org.freedesktop.fwupd.policy 
+  340  ls
+  341  sudo usermod -aG brlapi mercer
+  342  cd
+  343  cd /etc/
+  344  ls
+  345  sudo vim brltty.conf 
+  346  cd Documents/
+  347  cd brltty/
+  348  ./run-brltty -b cn -d usb -n
+  349  ./run-brltty -b cn -d usb -n -e -l 7
+  350  ./run-brltty -b cn -d usb: -n -e -l 7
+  351  lsusb
+  352  ./run-brltty -b cn -d usb: -n -e -l 7
+  353  sudo ./run-brltty -b cn -d usb: -n -e -l 7
+  354  ./run-brltty -b cn -n -e -l 7
+  355  ./run-brltty -b cn -d usb: -n -e -l 7
+  356  LSUSB
+  357  lsusb
+  358  ./run-brltty -b cn -d usb: -n -e -l 7
+  359  ./run-brltty -b cn -d usb: -n -e -l 7for dev in /dev/bus/usb/*/* ; do
+  360  done
+  361  for dev in /dev/bus/usb/*/* ; do   sudo chmod 666 $dev; done
+  362  ./run-brltty -b cn -d usb: -n -e -l 7
+  363  ./run-brltty -b cn -d usb: -n
+  364  sudo ./run-brltty -b cn -d usb: -n
+  365  ./run-brltty -b cn -d usb: -n
+  366  sudo chown $USER:$USER /var/lib/brltty
+  367  sudo chmod 755 /var/lib/brltty
+  368  ./run-brltty -b cn -d usb: -n
+  369  ls
+  370  ls /run/brltty/
+  371  sudo chown $USER:$USER /run/brltty
+  372  sudo chmod 755 /run/brltty
+  373  ./run-brltty -b cn -d usb: -n
+  374  sudo pkill brltty
+  375  lsusb
+  376  clear
+  377  ./run-brltty -b cn -d usb: -n
+  378  for dev in /dev/bus/usb/*/* ; do   sudo chmod 666 $dev; done
+  379  ./run-brltty -b cn -d usb: -n
+  380  sudo mkdir -p /run/brltty
+  381  sudo chown mercer:mercer /run/brltty
+  382  ./run-brltty -b cn -d usb: -n
+  383  cd Documents/brltty/
+  384  ./run-brltty -b cn -d usb: -n
+  385  lsusb
+  386  sudo group
+  387  sudo groupADD
+  388  sudo groupadd
+  389  sudo groupadd brlapi
+  390  sudo chmod 0640 /etc/brlapi.key
+  391  sudo chown root:brlapi /etc/brlapi.key
+  392  sudo usermod -aG plugdev mercer
+  393  sudo usermod -aG tty mercer
+  394  sudo usermod -aG dialout mercer
+  395  sudo usermod -aG input mercer
+  396  cd /etc/udev/rules.d/
+  397  ls
+  398  sudo vim 65-canute.rules
+  399  sudo udevadm control --reload-rules && sudo udevadm trigger
+  400  cd 
+  401  cd Documents/
+  402  cd brltty/
+  403  ./run-brltty -b cn -d usb:16c0/05e1 -n -l /tmp/brltty1_mercer.log -L debug
+  404  ./run-brltty -b cn -d usb: -n
+  405  lsusb
+  406  sudo reboot now
+  407  cd /etc/udev/
+  408  ls
+  409  cd rules.d/
+  410  ls
+  411  sudo rm 65-canute.rules 
+  412  cd
+  413  cd Documents/
+  414  cd brltty/
+  415  ./run-brltty -b ba -x a2
+  416  htop
+  417  ./run-brltty -b ba -x a2
+  418  pkill brltty
+  419  htop
+  420  ./run-brltty -b ba -x a2
+  421  pkill brltty 
+  422  ./run-brltty -b ba -x a2
+  423  cd Documents/
+  424  cd brltty/
+  425  lsusb
+  426  clear
+  427  ./run-brltty -b cn -d usb: -n
+  428  echo $HOME
+  429  cd /etc/brltty/
+  430  ls
+  431  cd
+  432  cd Documents/
+  433  ls
+  434  cd /etc/systemd/
+  435  sudo vim logind.conf 
+  436  clear
+  437  ls
+  438  python test.py 
+  439  cd ~
+  440  clear
+  441  pkill brltty 
+  442  cd /etc
+  443  ls
+  444  sudo vim brltty.conf
+  445  cd
+  446  cd Documents/
+  447  cd brltty/
+  448  hist
+  449  history

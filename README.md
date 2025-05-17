@@ -85,29 +85,58 @@ sudo nvpmodel -m 2
 
 Reboot to confirm change is persistent.
 
-## Disabling TTY
+## Switch to bash Instead of dash
 
 ```bash
-cd /etc/systemd
-sudo vim logind.conf
+# Check current binding:
+ls -l /bin/sh
 
-# Make the following changes:
-# (You may have to uncomment these lines)
-
-[Login]
-NAutoVTs=0
-ReserveVt=0
+# Re-configure and select 'No' when prompted:
+sudo dpkg-reconfigure dash
 ```
 
 ## Downloading and Builidng BRLTTY
-The following is done after the ```tty``` consoles have been disabled. For now we dont install, just build the binaries. Installing and then rebooting has caused issues with getting into GDM (Ubuntu). This forces you to use a ```tty``` instance that does not give you any admin privliges. The ```install``` argument to the ```make``` command does create X11 and GDM startup scripts that seem to be the culprits for the lack of GUI access after doing this. Might be able to get into a X session if you were able to properly use ```sudo```, but as for the Tegra firmware, it is not allowed.
+For now we dont install, just build the binaries. Installing and then rebooting has caused issues with getting into GDM (Ubuntu). This forces you to use a ```tty``` instance that does not give you any admin privliges. The ```install``` argument to the ```make``` command does create X11 and GDM startup scripts that seem to be the culprits for the lack of GUI access after doing this. Might be able to get into a X session if you were able to properly use ```sudo```, but as for the Tegra firmware, it is not allowed.
 
 ```bash
+cd ~
 git clone https://github.com/brltty/brltty.git
 cd brltty/
 git checkout master
-./autogen
+sudo ./autogen
 sudo Tools/reqpkgs -i
-./configure
-make -s
+sudo ./configure
+sudo make
+
+# Add user to brlapi group
+sudo usermod -aG brlapi $USER
 ```
+
+## Configure BRLTTY
+Uncomment the following lines inside of the ```/etc/brltty.conf``` file:
+
+```bash
+
+# BrlAPI Braille Driver Parameters
+braille-parameters ba:Auth=/etc/brlapi.key
+braille-parameters ba:Host=:0
+
+# AtSpi2 Screen Driver Parameters
+screen-parameters a2:Release=yes # [yes,no]
+screen-parameters a2:Type=default # [default,all,{terminal,text}+...]
+```
+
+## Displaying Terminal Text on Canute
+
+```bash
+cd img_2_braille
+chmod +x start_canute.sh
+./start_canute
+```
+
+At this point a brltty process will initiate. If the terminal used to start the program is killed, brltty is still running in the background. Use the following to kill the process:
+
+```bash
+pkill brltty
+```
+

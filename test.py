@@ -43,7 +43,7 @@ def main(stdscr):
     curses.curs_set(0)
     
     # Initialize viewer with folder path
-    viewer = BrfViewer("../Shapes/")  # Change this path
+    viewer = BrfViewer("/Shapes/")  # Change this path
     
     # Main loop
     while True:
