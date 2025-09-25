@@ -1,4 +1,4 @@
-# BRLTTY Build Notes on Jetson Orin
+# Jetson Orin First Steps
 
 ## Initial Jetson Setup/Optimizations
 
