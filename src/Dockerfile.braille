@@ -1,0 +1,50 @@
+#
+# Dockerfile: Install NVBlox and essential packages for Isaac ROS
+#
+
+ARG BASE_IMAGE=ubuntu:22.04
+FROM ${BASE_IMAGE}
+
+# Environment variable for Isaac ROS workspace
+ENV ISAAC_ROS_WS=/workspaces/isaac_ros-img
+
+# Install required system tools and packages
+RUN apt-get update && apt-get install -y \
+    nano \
+    usbutils \
+    uhubctl \
+    wget \
+    gcc \
+    ros-humble-nav2-bringup \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create workspace and clone required Isaac ROS packages
+WORKDIR ${ISAAC_ROS_WS}/src
+
+RUN git clone --recurse-submodules https://github.com/stargaze221/isaac_ros_nvblox.git && \
+    git clone -b release-3.2 https://github.com/NVIDIA-ISAAC-ROS/isaac_ros_common.git
+
+# Install ROS dependencies
+WORKDIR ${ISAAC_ROS_WS}
+RUN apt-get update && \
+    rosdep update && \
+    rosdep install --from-paths src --ignore-src -r -y --rosdistro humble
+
+# Optional: Build the workspace (commented out for now)
+# RUN bash -c "source /opt/ros/humble/setup.bash && colcon build --symlink-install"
+
+# Build and install usbreset tool
+WORKDIR /tmp
+RUN wget https://raw.githubusercontent.com/jkulesza/usbreset/master/usbreset.c && \
+    gcc usbreset.c -o usbreset && \
+    mv usbreset /usr/local/bin/ && \
+    chmod 755 /usr/local/bin/usbreset && \
+    rm usbreset.c
+
+# Additional Python Packages
+RUN pip install pyserial
+RUN pip install crcmod
+
+# Add custom entrypoint script
+COPY scripts/workspace-entrypoint.sh /usr/local/bin/scripts/
+RUN chmod +x /usr/local/bin/scripts/workspace-entrypoint.sh

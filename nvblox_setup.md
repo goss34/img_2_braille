@@ -27,6 +27,28 @@ source ~/.bashrc
 sudo chown -R $USER /mnt/nova_ssd
 ```
 
+## [Intel RealSense Firmware Setup on Jetson](https://github.com/IntelRealSense/librealsense/blob/master/doc/installation_jetson.md)
+
+1. Add servers public key:
+```bash
+sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-key F6E65AC044F831AC80A06380C8B3A55A6F3EFCDE || sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-key F6E65AC044F831AC80A06380C8B3A55A6F3EFCDE
+```
+
+2. Add server to repository list:
+```bash
+sudo add-apt-repository "deb https://librealsense.intel.com/Debian/apt-repo $(lsb_release -cs) main" -u
+```
+
+3. Install libraries:
+```bash
+sudo apt install librealsense2-utils librealsense2-dev
+```
+
+4. Verify installation:
+```bash
+realsense-viewer
+```
+
 ## [Isaac ROS RealSense Setup](https://nvidia-isaac-ros.github.io/getting_started/hardware_setup/sensors/realsense_setup.html)
 
 1. Plug in the RealSense camera
@@ -50,7 +72,7 @@ cd ${ISAAC_ROS_WS}/src/isaac_ros_common
 ./scripts/run_dev.sh -d ${ISAAC_ROS_WS}
 ```
 
-**Note** If this fails for any reason, you may just need to run the ```run_dev.sh``` script again.
+**Note** If this fails for any reason, you may just need to run the `run_dev.sh` script again.
 
 This will rebuild the container and may take a few minutes.
 
@@ -61,7 +83,7 @@ This will rebuild the container and may take a few minutes.
 sudo nvidia-ctk cdi generate --mode=csv --output=/etc/cdi/nvidia.yaml
 ```
 
-2. Install ```pva-allow-2```:
+2. Install `pva-allow-2`:
 ```bash
 sudo apt update
 sudo apt install software-properties-common
@@ -79,7 +101,7 @@ cd ${ISAAC_ROS_WS}/src/isaac_ros_common
 ./scripts/run_dev.sh -d ${ISAAC_ROS_WS}
 ```
 
-2. Once the Docker container is loaded, run ```realsense-viewer```:
+2. Once the Docker container is loaded, run `realsense-viewer`:
 ```bash
 realsense-viewer
 ```
@@ -130,23 +152,45 @@ versions/$LATEST_VERSION_ID/files/$NGC_FILENAME" && \
 fi
 ```
 
-3. Launch Docker container:
+3. Download nvblox from source:
+```bash
+cd ${ISAAC_ROS_WS}/src
+git clone --recursive -b release-3.2 https://github.com/NVIDIA-ISAAC-ROS/isaac_ros_nvblox.git isaac_ros_nvblox
+```
+
+4. Configure `realsense-splitter` package:
+```bash
+cd ${ISAAC_ROS_WS}/src/isaac_ros_nvblox/nvblox_examples/realsense_splitter
+git update-index --assume-unchanged COLCON_IGNORE
+rm COLCON_IGNORE
+```
+
+5. Launch Docker container:
 ```bash
 cd $ISAAC_ROS_WS && ./src/isaac_ros_common/scripts/run_dev.sh
 ```
 
-4. Install nvblox from Debian:
+6. Install `nvblox` package dependencies:
 ```bash
-sudo apt-get update
-sudo apt-get install -y ros-humble-isaac-ros-nvblox
-rosdep update
-rosdep install isaac_ros_nvblox
+sudo apt update
+rosdep update && rosdep install -i -r --from-paths ${ISAAC_ROS_WS}/src/isaac_ros_nvblox/ --rosdistro humble -y
 ```
 
-5. Run the example file to verify installation:
+7. Build and source ROS workspace:
 ```bash
-ros2 launch nvblox_examples_bringup isaac_sim_example.launch.py \
-rosbag:=${ISAAC_ROS_WS}/isaac_ros_assets/isaac_ros_nvblox/quickstart \
-navigation:=False
+cd /workspaces/isaac_ros-dev
+colcon build --symlink-install --base-paths ${ISAAC_ROS_WS}/src/isaac_ros_nvblox/
+source install/setup.bash
 ```
 
+8. Build `realsense-splitter` package:
+```bash
+cd /workspaces/isaac_ros-dev
+colcon build --symlink-install --packages-up-to realsense_splitter
+source install/setup.bash
+```
+
+9. Test installation using live sensor from RealSense camera:
+```bash
+ros2 launch nvblox_examples_bringup realsense_example.launch.py
+```
