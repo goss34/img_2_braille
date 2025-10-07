@@ -84,3 +84,27 @@ sudo nvpmodel -m 2
 ```
 
 Reboot to confirm change is persistent.
+
+### [Cyclone DDS Tuning](https://docs.ros.org/en/rolling/How-To-Guides/DDS-tuning.html#cyclone-dds-tuning)
+"Increase the maximum Linux kernel receive buffer size and the minimum socket receive buffer size that Cyclone uses."
+```bash
+cd
+vim config_file.xml
+```
+Paste the following information:
+```xml
+<?xml version="1.0" encoding="UTF-8" ?>
+<CycloneDDS xmlns="https://cdds.io/config" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://cdds.io/config
+https://raw.githubusercontent.com/eclipse-cyclonedds/cyclonedds/master/etc/cyclonedds.xsd">
+    <Domain id="any">
+        <Internal>
+            <SocketReceiveBufferSize min="10MB"/>
+        </Internal>
+    </Domain>
+</CycloneDDS>
+```
+Edit `.bashrc` and source:
+```bash
+echo 'export CYCLONEDDS_URI=~/config_file.xml' >> ~/.bashrc
+source ~/.bashrc
+```
