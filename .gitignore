@@ -1,2 +1,5 @@
 *.code-workspace
 .vscode/
+braille_snapshots/
+canute_logs/
+*.pyc
