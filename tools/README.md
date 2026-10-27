@@ -1,10 +1,12 @@
-# Diagnostic tools
+# Tools
 
-Standalone helpers for checking the Jetson setup and the Canute 360. None of them change
-the pipeline, and none are part of the `braille_interface` package.
+Standalone helpers for checking the Jetson setup and the Canute 360, and for deploying
+the package to the Jetson. None are part of the `braille_interface` package. Only
+`deploy_braille.sh` changes anything, and it backs up first.
 
 | Tool | What it does | Needs |
 |---|---|---|
+| `deploy_braille.sh` | Copies the package from a branch or commit into the Isaac ROS workspace, with a backup, rollback and a record of what's deployed | bash, git, rsync (Jetson host) |
 | `jetson_snapshot.sh` | Read-only snapshot of the Jetson host or container: code versions, local changes, Docker and ROS setup, devices | bash |
 | `snapshot_ros.py` | Called by the snapshot: Python module versions and, with `--live`, one message from each pipeline topic | ROS 2 (container) |
 | `canute_test.py` | Sends test patterns to the Canute, logs every frame, times refreshes, logs buttons | Python 3, `pyserial`, `crcmod` |
@@ -95,3 +97,32 @@ plugged in there (`pip install pyserial crcmod`, then `ports` to find it, e.g.
 - **full**: with calipers, measure the dot spacing inside a cell, the distance from a
   cell to the next one, and the distance from one line to the next.
 - **buttons**: the raw bytes for every physical button, including any shown as `unmapped`.
+
+## 3. Deploying code to the Jetson
+
+Run this on the Jetson host, not in the container, from the repo clone that lives outside
+the workspace. It deploys only `src/braille_interface`, into
+`$ISAAC_ROS_WS/src/isaac_ros_common/braille_interface`.
+
+```bash
+cd ~/img_2_braille && git pull                             # get the latest tools
+tools/deploy_braille.sh --status                           # what's deployed, and any hand edits since
+tools/deploy_braille.sh --dry-run jetson-snapshot-2026-10  # see what would change
+tools/deploy_braille.sh jetson-snapshot-2026-10            # deploy (asks first)
+```
+
+- **A branch name deploys GitHub's version** (`origin/<branch>`, fetched first), so push
+  before deploying. Tags and commit hashes work too. The clone's own checkout never
+  changes, so people can deploy different branches without switching branches.
+- **Every deploy is backed up** to `$ISAAC_ROS_WS/braille_deploy_backups/`.
+  `--rollback` undoes the most recent deploy or rollback; `--rollback FILE` restores a
+  specific backup; `--list` shows the history.
+- **It tells you when to rebuild.** Edits to existing `.py` files take effect the next time
+  you launch the pipeline. Changes to `setup.py`, `package.xml`, `resource/` or the set of
+  launch files need one build of this package inside the container:
+  `colcon build --symlink-install --packages-select braille_interface`.
+- **Make changes in the repo, not in the workspace.** `--status` lists any files edited by
+  hand since the last deploy. A deploy replaces them, though the backup keeps a copy.
+- The first deploy of `jetson-snapshot-2026-10` changes no code. It only removes
+  `braille_interface/bak/` and the stray `launch/build`, `launch/install` and `launch/log`
+  folders, and those stay in the backup.
