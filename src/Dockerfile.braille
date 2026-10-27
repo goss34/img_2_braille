@@ -45,6 +45,11 @@ RUN wget https://raw.githubusercontent.com/jkulesza/usbreset/master/usbreset.c &
 RUN pip install pyserial
 RUN pip install crcmod
 
-# Add custom entrypoint script
-COPY scripts/workspace-entrypoint.sh /usr/local/bin/scripts/
-RUN chmod +x /usr/local/bin/scripts/workspace-entrypoint.sh
+# Create entrypoint additions directory if it doesn't exist
+RUN mkdir -p /usr/local/bin/scripts/entrypoint_additions
+
+# Add custom entrypoint addition for workspace setup
+# NOTE: .user. in filename makes it run as container user, not root
+COPY scripts/isaac_ros_workspace_setup.user.sh /usr/local/bin/scripts/entrypoint_additions/
+RUN chmod +x /usr/local/bin/scripts/entrypoint_additions/isaac_ros_workspace_setup.user.sh
+
