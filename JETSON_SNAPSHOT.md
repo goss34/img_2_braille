@@ -20,6 +20,7 @@ git diff main..jetson-snapshot-2026-10
 | `src/Dockerfile.braille` | `$WS/src/isaac_ros_common/docker/Dockerfile.yoon` |
 | `src/docker/scripts/isaac_ros_workspace_setup.user.sh` | `$WS/src/isaac_ros_common/docker/scripts/` (the image copies it into `/usr/local/bin/scripts/entrypoint_additions/`) |
 | `src/udev/99-braille-board.rules` | `/etc/udev/rules.d/99-braille-board.rules` (host, not the container) |
+| `src/scripts/reset_realsense.sh` | `$WS/src/scripts/reset_realsense.sh` (camera USB ID set to the D455's `8086:0b5c`) |
 
 On the Jetson the Dockerfile is named `Dockerfile.yoon` and selected by
 `CONFIG_IMAGE_KEY=ros2_humble.realsense.yoon` in
@@ -36,7 +37,5 @@ name going forward.
 - `$WS/src/isaac_ros_common/docker/udev_rules/99-canute-braille.rules`: not used. The
   Dockerfile never copies it, and the host rule above is the live one.
 
-## Not captured yet
-
-- `$WS/src/scripts/reset_realsense.sh`: may differ from `src/scripts/reset_realsense.sh`
-  (the setup guide says to edit the camera's USB ID in it).
+`reset_realsense.sh` was reconstructed from the Jetson's terminal output, not copied
+byte-for-byte. Running `md5sum` on the Jetson's copy should print `b4cec462ac7d938c6227666b3a6300bd`.
