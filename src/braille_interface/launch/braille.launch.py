@@ -15,11 +15,33 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
+import fcntl
+import ipaddress
+import socket
+import struct
+
 from isaac_ros_launch_utils.all_types import *
 import isaac_ros_launch_utils as lu
 
 from nvblox_ros_python_utils.nvblox_launch_utils import NvbloxMode, NvbloxCamera, NvbloxPeopleSegmentation
 from nvblox_ros_python_utils.nvblox_constants import NVBLOX_CONTAINER_NAME
+
+SIOCGIFADDR = 0x8915  # Linux ioctl: get an interface's IPv4 address
+TAILSCALE_RANGE = ipaddress.ip_network('100.64.0.0/10')
+
+
+def tailscale_ipv4():
+    """Return this machine's Tailscale IPv4 address, or None if it doesn't have one."""
+    with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as sock:
+        for _, name in socket.if_nameindex():
+            try:
+                reply = fcntl.ioctl(sock.fileno(), SIOCGIFADDR, struct.pack('256s', name.encode()[:15]))
+            except OSError:
+                continue  # this interface has no IPv4 address
+            address = socket.inet_ntoa(reply[20:24])
+            if ipaddress.ip_address(address) in TAILSCALE_RANGE:
+                return address
+    return None
 
 
 def generate_launch_description() -> LaunchDescription:
@@ -73,6 +95,17 @@ def generate_launch_description() -> LaunchDescription:
         'use_foxglove_whitelist',
         False,
         description='Disable visualization of bandwidth-heavy topics',
+        cli=True)
+    args.add_arg(
+        'run_foxglove',
+        'False',
+        description='Start foxglove_bridge so the pipeline can be viewed in Foxglove.',
+        cli=True)
+    args.add_arg(
+        'foxglove_address',
+        tailscale_ipv4() or '127.0.0.1',
+        description="Address foxglove_bridge listens on. Defaults to this machine's Tailscale "
+                    'address, or 127.0.0.1 if it has none.',
         cli=True)
     actions = args.get_launch_actions()
 
@@ -231,6 +264,17 @@ def generate_launch_description() -> LaunchDescription:
         ExecuteProcess(
             cmd=['ros2', 'run', 'braille_interface', 'image_to_braille_node'],
             output='screen',
+        )
+    )
+
+    # foxglove_bridge, view-only: clients can't publish, change parameters or call services
+    actions.append(
+        ExecuteProcess(
+            cmd=['ros2', 'launch', 'foxglove_bridge', 'foxglove_bridge_launch.xml',
+                 ['address:=', args.foxglove_address],
+                 'capabilities:=[connectionGraph,assets]'],
+            output='screen',
+            condition=IfCondition(args.run_foxglove),
         )
     )
 
