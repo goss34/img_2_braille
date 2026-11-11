@@ -10,6 +10,7 @@ the package to the Jetson. None are part of the `braille_interface` package. Onl
 | `jetson_snapshot.sh` | Read-only snapshot of the Jetson host or container: code versions, local changes, Docker and ROS setup, devices | bash |
 | `snapshot_ros.py` | Called by the snapshot: Python module versions and, with `--live`, one message from each pipeline topic | ROS 2 (container) |
 | `canute_test.py` | Sends test patterns to the Canute, logs every frame, times refreshes, logs buttons | Python 3, `pyserial`, `crcmod` |
+| `braille_sim/` | The [braille simulator](simulator.md): the board, its buttons and a test room on a laptop | Python 3, numpy, OpenCV, Tk |
 
 ## Getting the tools onto the Jetson without touching your working copy
 

@@ -12,6 +12,10 @@ Setting up a Jetson, in order:
 2. [nvblox setup](docs/nvblox_setup.md): Isaac ROS workspace, RealSense and nvblox
 3. [Braille package setup](docs/braille_setup.md): installing and running `braille_interface`
 
+Developing:
+- [Braille simulator](docs/simulator.md): the board, its buttons and a test room on your laptop,
+  running the same display code as the Jetson
+
 Working with the Jetson:
 - [Isaac ROS container](docs/container.md): how it's built and started, aliases, changing it safely
 - [Foxglove](docs/foxglove.md): watching the pipeline from your own computer (ongoing page)
@@ -24,11 +28,11 @@ Working with the Jetson:
 
 | Path | What's there |
 |---|---|
-| `src/braille_interface/` | The ROS 2 package |
+| `src/braille_interface/` | The ROS 2 package; `braille_interface/display.py` holds the display logic shared with the simulator |
 | `src/Dockerfile.braille`, `src/docker/scripts/` | The Isaac ROS container's extra layer and its startup script |
 | `src/scripts/` | `reset_realsense.sh` |
 | `src/udev/` | udev rule for the Canute 360 (installed on the Jetson host) |
-| `tools/` | Deploy, snapshot and Canute test scripts |
+| `tools/` | Deploy, snapshot and Canute test scripts; `tools/braille_sim/` is the simulator |
 | `docs/` | Documentation |
 
 ## Branches
