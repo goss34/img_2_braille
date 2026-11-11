@@ -13,6 +13,7 @@ Setting up a Jetson, in order:
 3. [Braille package setup](docs/braille_setup.md): installing and running `braille_interface`
 
 Working with the Jetson:
+- [Isaac ROS container](docs/container.md): how it's built and started, aliases, changing it safely
 - [Foxglove](docs/foxglove.md): watching the pipeline from your own computer (ongoing page)
 - [X11 forwarding with VS Code](docs/x11_forwarding_vscode.md): Jetson windows on a Mac
 - [Tools](docs/tools.md): deploying code, Jetson snapshots, Canute board tests
