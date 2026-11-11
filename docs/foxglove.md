@@ -108,7 +108,8 @@ only `/tf` through the bridge.
   Display frame was set to `odom`. Viewing the raw camera triggered "Server is dropping
   messages". `rviz2` over X11 failed the same day, which is why we use Foxglove for 3D.
 - **2026-11-10:** `run_foxglove:=True` added to `braille.launch.py` (commit `56ae290`).
-  Not yet tested on the Jetson.
+  Tested on the Jetson with `launch_braille run_foxglove:=True`: the bridge started with
+  the pipeline and found the Tailscale address by itself.
 
 ## Sources
 
