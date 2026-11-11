@@ -10,11 +10,12 @@ Ours adds one layer on top of NVIDIA's ROS 2 and RealSense layers:
 
 | In this repo | On the Jetson | What it does |
 | --- | --- | --- |
-| `src/Dockerfile.braille` | `$ISAAC_ROS_WS/src/isaac_ros_common/docker/Dockerfile.yoon` | Adds tools (`usbreset`, `pyserial`, `crcmod`, …) and copies in the startup script |
+| `src/Dockerfile.braille` | `$ISAAC_ROS_WS/src/isaac_ros_common/docker/Dockerfile.braille` | Adds tools (`usbreset`, `pyserial`, `crcmod`, …) and copies in the startup script |
 | `src/docker/scripts/isaac_ros_workspace_setup.user.sh` | `$ISAAC_ROS_WS/src/isaac_ros_common/docker/scripts/` | The startup script, run as `admin` every time the container starts |
 
-The Jetson still uses the `.yoon` name (`CONFIG_IMAGE_KEY=ros2_humble.realsense.yoon`);
-this repo uses `.braille`.
+The image key is `CONFIG_IMAGE_KEY=ros2_humble.realsense.braille`. Its last part names
+our Dockerfile: if you rename the Dockerfile, change the key to match, or `run_dev.sh`
+fails with `Could not resolve Dockerfiles for target image ids`.
 
 ## What happens at startup
 
@@ -79,9 +80,16 @@ stopped building) and `pre-hook-2025` (the build before the startup script was a
   `/workspaces/isaac_ros-img`, but `run_dev.sh` overrides it with
   `/workspaces/isaac_ros-dev`. The nvblox fork it clones is only used to install
   dependencies into the image.
+- **`build_braille` prints `ERROR setuptools_scm … listing git files failed`.** Harmless:
+  the build still finishes.
 
 ## History
 
 - **2026-10:** state recorded on the `jetson-snapshot-2026-10` branch. The startup script
   ran `rosdep` and a full `colcon build` on every start; the build always failed.
-- **2026-11-10:** the startup script stops building; `build_braille` alias added.
+- **2026-11-10:** the startup script stops building; `build_braille` alias added. On the
+  Jetson, only the last two image steps rebuilt and the container started without
+  building. `rosdep check` confirmed nothing depended on the old startup step: its
+  `rosdep install` could never have worked, because the container user has no rosdep
+  cache until it runs `rosdep update` itself. The Dockerfile was renamed from
+  `Dockerfile.yoon` to `Dockerfile.braille` and the image key changed to match.

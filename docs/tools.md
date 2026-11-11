@@ -119,8 +119,8 @@ tools/deploy_braille.sh jetson-snapshot-2026-10            # deploy (asks first)
   specific backup; `--list` shows the history.
 - **It tells you when to rebuild.** Edits to existing `.py` files take effect the next time
   you launch the pipeline. Changes to `setup.py`, `package.xml`, `resource/` or the set of
-  launch files need one build of this package inside the container:
-  `colcon build --symlink-install --packages-select braille_interface`.
+  launch files need one build of this package inside the container: `build_braille`
+  (short for `colcon build --symlink-install --packages-select braille_interface`).
 - **Make changes in the repo, not in the workspace.** `--status` lists any files edited by
   hand since the last deploy. A deploy replaces them, though the backup keeps a copy.
 - The first deploy of `jetson-snapshot-2026-10` changes no code. It only removes
