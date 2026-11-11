@@ -418,5 +418,5 @@ echo "  folder:  $OUT"
 echo "  archive: $OUT.tar.gz"
 echo "Please skim report.txt before sharing it."
 if [ "$MODE" = host ]; then
-  echo "Next: run this script again inside the Isaac ROS container (see tools/README.md)."
+  echo "Next: run this script again inside the Isaac ROS container (see docs/tools.md)."
 fi
