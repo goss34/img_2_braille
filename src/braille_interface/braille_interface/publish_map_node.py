@@ -9,7 +9,7 @@ from cv_bridge import CvBridge
 import cv2
 import numpy as np
 
-DOT_ROWS, DOT_COLS = 36, 80
+from braille_interface.display import DOT_ROWS, DOT_COLS, heightmap_to_dots
 
 
 class BrailleMapPublisher(Node):
@@ -51,10 +51,7 @@ class BrailleMapPublisher(Node):
             self.get_logger().error(f"cv_bridge error: {e}")
             return
 
-        if img.shape != (DOT_ROWS, DOT_COLS):
-            img = cv2.resize(img, (DOT_COLS, DOT_ROWS), interpolation=cv2.INTER_LINEAR)
-
-        bin_img = floyd_steinberg_dither(img) if self.use_dithering else (img > 127).astype(np.uint8)
+        bin_img = heightmap_to_dots(img, self.use_dithering)
 
         msg_out = UInt8MultiArray()
         msg_out.data = bin_img.flatten().astype(np.uint8).tolist()
@@ -73,25 +70,6 @@ class BrailleMapPublisher(Node):
                 self.debug_pub.publish(debug_msg)
             except Exception as e:
                 self.get_logger().warn(f"Debug image display error: {e}")
-
-
-def floyd_steinberg_dither(img: np.ndarray) -> np.ndarray:
-    img = img.astype(np.float32) / 255.0
-    h, w = img.shape
-    out = np.copy(img)
-
-    for y in range(h):
-        for x in range(w):
-            old = out[y, x]
-            new = round(old)
-            out[y, x] = new
-            err = old - new
-            if x + 1 < w: out[y, x + 1] += err * 7 / 16
-            if x > 0 and y + 1 < h: out[y + 1, x - 1] += err * 3 / 16
-            if y + 1 < h: out[y + 1, x] += err * 5 / 16
-            if x + 1 < w and y + 1 < h: out[y + 1, x + 1] += err * 1 / 16
-
-    return (out > 0.5).astype(np.uint8)
 
 
 def main(args=None):

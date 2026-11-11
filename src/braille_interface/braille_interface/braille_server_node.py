@@ -14,19 +14,12 @@ import threading
 
 from braille_interface.util.simple_hdlc import HDLC
 from braille_interface.util.comms_codes import CMD_SEND_LINE, CMD_SEND_BUTTONS, CMD_WARMUP
+from braille_interface.display import (
+    ROWS, CELLS as CHARS, DOT_ROWS, DOT_COLS,
+    compose_view, decode_buttons, line_payload, next_mode, occupancy_to_braille)
 
 SERIAL_PORT = '/dev/ttyACM0'
 BAUDRATE = 57600
-ROWS, CHARS = 9, 40
-DOT_ROWS, DOT_COLS = ROWS * 4, CHARS * 2
-
-BUTTON_MAP_X = {
-    0: "ROW_0", 1: "ROW_1", 2: "ROW_2", 3: "ROW_3",
-    4: "ROW_4", 5: "ROW_5", 6: "ROW_6", 7: "ROW_7"
-}
-BUTTON_MAP_Y = {
-    3: "LEFT", 4: "CENTER", 5: "RIGHT"
-}
 
 
 class BraillePipelineNode(Node):
@@ -105,39 +98,16 @@ class BraillePipelineNode(Node):
     # ------------------------------------------------------------------
 
     def handle_trigger(self, request, response):
-        map1 = self.occupancy_map
-        map2 = self.image_map
+        view = compose_view(self.display_mode, self.occupancy_map, self.image_map)
+        if view.warning:
+            self.get_logger().warn(view.warning)
+        if view.image is None:
+            response.success = False
+            response.message = view.error
+            return response
+        processed = view.image
 
-        if self.display_mode == 'split':
-            if map1 is None or map2 is None:
-                self.get_logger().warn("Split view requested, but one map is missing.")
-                fallback_map = map1 if map1 is not None else map2
-                if fallback_map is None:
-                    response.success = False
-                    response.message = "No maps available for fallback."
-                    return response
-                processed = self.preprocess_and_pad(fallback_map, (DOT_ROWS, DOT_COLS))
-            else:
-                left     = self.preprocess_and_pad(map1, (DOT_ROWS, DOT_COLS // 2 - 1))
-                right    = self.preprocess_and_pad(map2, (DOT_ROWS, DOT_COLS // 2 - 1))
-                divider  = 255 * np.ones((DOT_ROWS, 2), dtype=np.uint8)
-                processed = np.hstack((left, divider, right))
-
-        elif self.display_mode == 'occupancy':
-            if map1 is None:
-                response.success = False
-                response.message = "No occupancy map available."
-                return response
-            processed = self.preprocess_and_pad(map1, (DOT_ROWS, DOT_COLS))
-
-        elif self.display_mode == 'image':
-            if map2 is None:
-                response.success = False
-                response.message = "No image map available."
-                return response
-            processed = self.preprocess_and_pad(map2, (DOT_ROWS, DOT_COLS))
-
-        braille_lines = self.occupancy_to_braille(processed)
+        braille_lines = occupancy_to_braille(processed)
         for row, line in enumerate(braille_lines):
             self.send_line(row, line)
             time.sleep(0.05)
@@ -159,17 +129,7 @@ class BraillePipelineNode(Node):
             self.get_logger().warn(f"[Invalid Frame] Too short: {list(frame)}")
             return
 
-        x_byte = frame[1]
-        y_byte = frame[2]
-        active = set()
-
-        for bit, name in BUTTON_MAP_X.items():
-            if x_byte & (1 << bit):
-                active.add(name)
-
-        for bit, name in BUTTON_MAP_Y.items():
-            if y_byte & (1 << bit):
-                active.add(name)
+        active = decode_buttons(frame[1], frame[2])
 
         new_presses = active - self.prev_buttons
         if new_presses:
@@ -188,9 +148,7 @@ class BraillePipelineNode(Node):
                 self.warmup_display()
 
             if "RIGHT" in new_presses:
-                modes = ['split', 'occupancy', 'image']
-                idx = (modes.index(self.display_mode) + 1) % len(modes)
-                self.display_mode = modes[idx]
+                self.display_mode = next_mode(self.display_mode)
                 self.get_logger().info(f"[Mode Change] → {self.display_mode}")
                 self.call_braille_update_service()
 
@@ -267,52 +225,10 @@ class BraillePipelineNode(Node):
     # Braille encoding / serial send
     # ------------------------------------------------------------------
 
-    def occupancy_to_braille(self, grid):
-        lines = []
-        for r in range(0, DOT_ROWS, 4):
-            line = ''
-            for c in range(0, DOT_COLS, 2):
-                cell = 0
-                for dy, dx in [(i, j) for i in range(4) for j in range(2)]:
-                    if grid[r + dy, c + dx]:
-                        bit = {(0, 0): 0, (1, 0): 1, (2, 0): 2, (3, 0): 6,
-                               (0, 1): 3, (1, 1): 4, (2, 1): 5, (3, 1): 7}[(dy, dx)]
-                        cell |= (1 << bit)
-                line += chr(0x2800 + cell)
-            lines.append(line)
-        return lines
-
     def send_line(self, row, text):
-        payload = bytes([ord(c) & 0x3F for c in text.ljust(CHARS)])
-        packet  = bytes([CMD_SEND_LINE, row]) + payload
+        packet  = bytes([CMD_SEND_LINE, row]) + line_payload(text)
         self.hdlc.sendFrame(packet)
         self.get_logger().info(f"Row {row} sent: {text}")
-
-    def preprocess_and_pad(self, input_img, target_shape=(DOT_ROWS, DOT_COLS)):
-        h, w = input_img.shape
-        target_h, target_w = target_shape
-
-        if h == 0 or w == 0:
-            self.get_logger().warn("Empty input image received.")
-            return np.zeros(target_shape, dtype=np.uint8)
-
-        input_aspect  = w / h
-        target_aspect = target_w / target_h
-
-        if input_aspect > target_aspect:
-            new_w = target_w
-            new_h = int(target_w / input_aspect)
-        else:
-            new_h = target_h
-            new_w = int(target_h * input_aspect)
-
-        resized = cv2.resize(input_img, (new_w, new_h), interpolation=cv2.INTER_NEAREST)
-        padded  = np.zeros(target_shape, dtype=np.uint8)
-        y_offset = (target_h - new_h) // 2
-        x_offset = (target_w - new_w) // 2
-        padded[y_offset:y_offset + new_h, x_offset:x_offset + new_w] = resized
-
-        return padded
 
     # ------------------------------------------------------------------
     # Debug image

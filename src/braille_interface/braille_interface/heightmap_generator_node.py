@@ -12,8 +12,7 @@ import numpy as np
 import cv2
 import math
 
-DOT_ROWS = 36
-DOT_COLS = 80
+from braille_interface.display import occupancy_to_raw, render_ego_crop, yaw_from_quaternion
 
 
 class BrailleHeightmapNode(Node):
@@ -130,21 +129,9 @@ class BrailleHeightmapNode(Node):
 
         occ_data = np.array(msg.data, dtype=np.int8).reshape((height, width))
 
-        # Convert to uint8.
-        # Default: raised dots = obstacles/walls, lowered = free space.
-        #   255 (raised) = occupied or unknown
-        #     0 (lowered) = free
-        #   128 (mid)    = unobserved (no dot on braille board)
+        # Raised (255) = occupied or unknown, lowered (0) = free, 128 = anything else.
         # Set invert_colors=true to flip raised/lowered if needed.
-        raw_map = np.full((height, width), 128, dtype=np.uint8)
-        if self.invert_colors:
-            raw_map[occ_data == 0]   = 255  # Free     → raised
-            raw_map[occ_data == 100] = 0    # Occupied → lowered
-            raw_map[occ_data == -1]  = 0    # Unknown  → lowered
-        else:
-            raw_map[occ_data == 0]   = 0    # Free     → lowered
-            raw_map[occ_data == 100] = 255  # Occupied → raised
-            raw_map[occ_data == -1]  = 255  # Unknown  → raised
+        raw_map = occupancy_to_raw(occ_data, self.invert_colors)
 
         self.full_occ_raw  = raw_map
         self.full_occ_meta = {
@@ -216,58 +203,11 @@ class BrailleHeightmapNode(Node):
         if self.latest_pose is None:
             return None
 
-        pose   = self.latest_pose
-        meta   = self.full_occ_meta
-        res    = meta['resolution']
-        ox, oy = meta['origin_x'], meta['origin_y']
-        raw    = self.full_occ_raw
-
-        cam_x = pose.position.x
-        cam_y = pose.position.y
-
-        q   = pose.orientation
-        yaw = math.atan2(
-            2 * (q.w * q.z + q.x * q.y),
-            1 - 2 * (q.y * q.y + q.z * q.z)
-        )
-
-        half_w = self.size / 2.0  # lateral half-width (±left/right of camera)
-        depth  = self.size        # forward depth       (0 → depth ahead)
-
-        # Patch pixel dimensions
-        patch_w = max(int(math.ceil(self.size / res)), 1)  # lateral axis
-        patch_h = max(int(math.ceil(depth  / res)), 1)     # forward axis
-
-        patch = np.full((patch_h, patch_w), 128, dtype=np.uint8)
-
-        # Camera-local → world rotation components
-        #   camera forward in world = ( cos_yaw,  sin_yaw )
-        #   camera right   in world = ( sin_yaw, -cos_yaw )
-        cos_yaw = math.cos(yaw)
-        sin_yaw = math.sin(yaw)
-
-        for pr in range(patch_h):
-            for pc in range(patch_w):
-                # Camera-local offsets in metres:
-                #   fwd_offset: pr=0 → full depth ahead; pr=patch_h-1 → ~0 (at camera)
-                #   lat_offset: pc=0 → hard left (-half_w); pc=patch_w-1 → hard right (+half_w)
-                fwd_offset =  depth  - (pr + 0.5) * res
-                lat_offset = -half_w + (pc + 0.5) * res
-
-                # Rotate offset into world frame
-                wx = cam_x + fwd_offset * cos_yaw + lat_offset * sin_yaw
-                wy = cam_y + fwd_offset * sin_yaw - lat_offset * cos_yaw
-
-                # World coordinate → map pixel index
-                mx = int((wx - ox) / res)
-                my = int((wy - oy) / res)
-
-                if 0 <= mx < meta['width'] and 0 <= my < meta['height']:
-                    patch[pr, pc] = raw[my, mx]
-                # else: leave as 128 (outside known map area)
-
-        braille_map = self.preprocess_and_pad(patch, target_shape=(DOT_ROWS, DOT_COLS))
-        return braille_map
+        pose = self.latest_pose
+        return render_ego_crop(
+            self.full_occ_raw, self.full_occ_meta,
+            pose.position.x, pose.position.y, yaw_from_quaternion(pose.orientation),
+            self.size)
 
     # ------------------------------------------------------------------
     # Publish helpers
@@ -321,35 +261,8 @@ class BrailleHeightmapNode(Node):
         return debug_image
 
     # ------------------------------------------------------------------
-    # Geometry / preprocessing utilities
+    # Mesh heightmap (mesh source only)
     # ------------------------------------------------------------------
-
-    def preprocess_and_pad(self, input_img, target_shape):
-        h, w = input_img.shape
-        target_h, target_w = target_shape
-        input_aspect  = w / h
-        target_aspect = target_w / target_h
-
-        if input_aspect > target_aspect:
-            new_w = target_w
-            new_h = int(target_w / input_aspect)
-        else:
-            new_h = target_h
-            new_w = int(target_h * input_aspect)
-
-        resized = cv2.resize(input_img, (new_w, new_h), interpolation=cv2.INTER_NEAREST)
-        padded  = np.full(target_shape, 128, dtype=np.uint8)
-        y_offset = (target_h - new_h) // 2
-        x_offset = (target_w - new_w) // 2
-        padded[y_offset:y_offset + new_h, x_offset:x_offset + new_w] = resized
-
-        cv2.rectangle(
-            padded,
-            (x_offset, y_offset),
-            (x_offset + new_w - 1, y_offset + new_h - 1),
-            255, 1
-        )
-        return padded
 
     @staticmethod
     def generate_heightmap(vertices, grid_size=(60, 60), method='max',
