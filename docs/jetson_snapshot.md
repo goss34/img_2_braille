@@ -1,9 +1,10 @@
 # Jetson snapshot (October 2026)
 
-This branch records the braille code and container setup as they actually ran on the
-team's Jetson (`mercer-jetson`). The files were collected on 2026-10-14 (snapshot tool)
-and 2026-10-21 (archive of the workspace copy). Compare it with `main` to see what the
-Jetson runs that GitHub didn't have:
+The `jetson-snapshot-2026-10` branch records the braille code and container setup as they
+actually ran on the team's Jetson (`mercer-jetson`) before this repo was used to deploy
+it. The files were collected on 2026-10-14 (snapshot tool) and 2026-10-21 (archive of the
+workspace copy). The branch is frozen; it was merged into `dev` on 2026-10-27. Compare it
+with `main` to see what the Jetson ran that GitHub didn't have:
 
 ```bash
 git diff main..jetson-snapshot-2026-10

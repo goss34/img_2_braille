@@ -77,13 +77,11 @@ ros2 launch braille.launch.py
 
 ## Viewing the pipeline in Foxglove
 
-Add `run_foxglove:=True` when launching to also start `foxglove_bridge`:
+To watch the pipeline from another computer, add `run_foxglove:=True`:
 ```bash
 ros2 launch braille.launch.py run_foxglove:=True
 ```
-The bridge is view-only and listens on the Jetson's Tailscale address. In the [Foxglove app](https://foxglove.dev/download), on a machine in the same Tailscale network, choose **Open connection → Foxglove WebSocket** and enter `ws://mercer-jetson:8765`.
-
-In the 3D panel, set **Display frame** to `odom` and turn on `/nvblox_node/static_occupancy_grid` and `/visual_slam/tracking/vo_pose` under **Topics**. Avoid leaving an Image panel on the uncompressed `/camera0/color/image_raw`: it can use more bandwidth than the connection has, and the bridge then starts dropping messages.
+See [Foxglove](foxglove.md) for connecting, panel settings and known problems.
 
 ## Notes
 
