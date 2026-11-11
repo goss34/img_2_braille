@@ -32,7 +32,7 @@ fails with `Could not resolve Dockerfiles for target image ids`.
 | --- | --- |
 | `launch_braille` | Starts the pipeline (`ros2 launch braille.launch.py`); add `run_foxglove:=True` for [Foxglove](foxglove.md) |
 | `build_braille` | Builds only `braille_interface`: the usual build after a deploy says one is needed |
-| `build_ws` | Builds the whole workspace, including nvblox (slow; see known issues) |
+| `build_ws` | Builds the whole workspace, including nvblox. Slow, and it replaces what the pipeline runs, so back up `install/` first (e.g. `cp -a install install.bak` on the host) |
 | `source_ws` | Re-sources the workspace in the current shell |
 
 ## Changing the Dockerfile or the startup script
@@ -69,10 +69,16 @@ stopped building) and `pre-hook-2025` (the build before the startup script was a
 
 ## Known issues
 
-- **Full builds fail at the install step.** About 575 files in `build/`, `install/` and
-  `log/` are owned by root, left by an earlier build that ran as root, so `build_ws` fails
-  (e.g. in `nvblox_ros_common`). `build_braille` isn't affected. Fix pending: change their
-  owner back to the normal user.
+- **Never build as root** (e.g. `sudo colcon build`). It leaves root-owned files in
+  `build/`, `install/` and `log/`, and later builds then fail at the install step with
+  `cannot set permissions … Operation not permitted`. To fix it, give those files back to
+  the normal user on the Jetson host (`-h` changes symlinks themselves, since many point
+  to container paths that don't exist on the host):
+
+  ```bash
+  sudo find "$ISAAC_ROS_WS"/build "$ISAAC_ROS_WS"/install "$ISAAC_ROS_WS"/log -user root -exec chown -h mercer:mercer {} +
+  ```
+
 - **Don't let the image's early layers rebuild.** Our Dockerfile's `apt-get update` would
   fail today because of changes in the package repositories. Those layers come from
   Docker's cache, so don't prune Docker images or its build cache.
@@ -93,3 +99,6 @@ stopped building) and `pre-hook-2025` (the build before the startup script was a
   `rosdep install` could never have worked, because the container user has no rosdep
   cache until it runs `rosdep update` itself. The Dockerfile was renamed from
   `Dockerfile.yoon` to `Dockerfile.braille` and the image key changed to match.
+- **2026-11-10:** the 575 root-owned files left in `build/`, `install/` and `log/` by an
+  earlier root build were given back to `mercer` (count now 0), so full builds should no
+  longer fail at the install step. `build_ws` hasn't been run since.
