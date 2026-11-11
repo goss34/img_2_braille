@@ -5,7 +5,7 @@ Code uses. Good for simple GUI tools. For 3D tools like `rviz2`, use
 [Foxglove](foxglove.md) instead.
 
 | Tool | Over X11 | Tested |
-|---|---|---|
+| --- | --- | --- |
 | Simple GUI tools (Qt, Tk, matplotlib), `xeyes` | Works | `xeyes` works (2026-11-03) |
 | `rqt_image_view` | Should work; fine for small debug images, slow for the full camera | Not yet |
 | `rviz2` | **Doesn't work**: OpenGL fails through XQuartz | Failed (2026-11-03) |
@@ -16,7 +16,8 @@ Code uses. Good for simple GUI tools. For 3D tools like `rviz2`, use
 1. Install [XQuartz](https://www.xquartz.org), then log out and back in so it can set
    `DISPLAY`.
 2. Add the Jetson to `~/.ssh/config`:
-   ```
+
+   ```text
    Host mercer-jetson
      HostName mercer-jetson
      User mercer
@@ -24,6 +25,7 @@ Code uses. Good for simple GUI tools. For 3D tools like `rviz2`, use
      ForwardX11Trusted yes
      XAuthLocation /opt/X11/bin/xauth
    ```
+
    `ForwardX11Trusted yes` gives programs on the Jetson full access to your XQuartz
    session, so keep it limited to this host.
 3. In XQuartz → Settings → Security, leave **Allow connections from network clients**
@@ -36,9 +38,11 @@ settings.
 ## Test
 
 1. **Plain SSH first.** From a Mac terminal, run `ssh mercer-jetson`, then on the Jetson:
+
    ```bash
    echo $DISPLAY; which xauth; grep -i '^X11' /etc/ssh/sshd_config
    ```
+
    Expect something like `localhost:10.0`, a path to `xauth`, and `X11Forwarding yes`.
    Then run `xeyes`; a window should open on your Mac.
 2. **VS Code.** Reconnect the remote window, open a *new* terminal (not a restored one), and

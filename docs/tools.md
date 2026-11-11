@@ -5,7 +5,7 @@ the package to the Jetson. None are part of the `braille_interface` package. Onl
 `deploy_braille.sh` changes anything, and it backs up first.
 
 | Tool | What it does | Needs |
-|---|---|---|
+| --- | --- | --- |
 | `deploy_braille.sh` | Copies the package from a branch or commit into the Isaac ROS workspace, with a backup, rollback and a record of what's deployed | bash, git, rsync (Jetson host) |
 | `jetson_snapshot.sh` | Read-only snapshot of the Jetson host or container: code versions, local changes, Docker and ROS setup, devices | bash |
 | `snapshot_ros.py` | Called by the snapshot: Python module versions and, with `--live`, one message from each pipeline topic | ROS 2 (container) |

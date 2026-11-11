@@ -15,9 +15,11 @@ your computer draws it, so it works where `rviz2` over X11 doesn't (see
    covers 3 users; the Academic plan is $0 with a university email address.
 2. Make sure your computer is on the same Tailscale network as the Jetson.
 3. In the container, start the pipeline with the bridge:
+
    ```bash
    launch_braille run_foxglove:=True
    ```
+
    The bridge's startup log should show the Jetson's Tailscale address:
    `[WS] WebSocket server listening at ws://100.x.y.z:8765`.
 4. In Foxglove: **Open connection → Foxglove WebSocket** → `ws://mercer-jetson:8765`.
@@ -39,6 +41,7 @@ in our container). It's off by default.
 By default the bridge would listen on every network, with no password and full
 capabilities. Keep these settings if you ever start it another way. The manual command
 we tested with is:
+
 ```bash
 ros2 launch foxglove_bridge foxglove_bridge_launch.xml address:=<tailscale ip> capabilities:='[connectionGraph,assets]'
 ```
@@ -46,6 +49,7 @@ ros2 launch foxglove_bridge foxglove_bridge_launch.xml address:=<tailscale ip> c
 ## Panels
 
 **3D panel**
+
 - Set **Display frame** to `odom`. Leave **Fixed frame** blank.
 - Under **Topics** in the panel settings, click the eye icon next to
   `/nvblox_node/static_occupancy_grid` and `/visual_slam/tracking/vo_pose`.
@@ -53,7 +57,7 @@ ros2 launch foxglove_bridge foxglove_bridge_launch.xml address:=<tailscale ip> c
 **Image panels.** Pick the topic in the panel's settings (gear icon).
 
 | Topic | What it shows |
-|---|---|
+| --- | --- |
 | `/braille_image_debug` | The camera image at board resolution, blurred, and its edges, side by side. Small and cheap. |
 | `/braille/heightmap_generator_debug_viz` | The ego-centric map crop. Only updates when CENTER renders a new map in occupancy mode. |
 | `/braille_publish_map_node/debug_image` | That crop after it's converted to raised/lowered dots. |
@@ -71,6 +75,7 @@ warning suggests, doesn't help: the overload is steady, so a bigger buffer only 
 too, adding lag and using the Jetson's memory. This doesn't affect the pipeline itself.
 
 **Panels stay empty**
+
 - The pipeline isn't running: the **Topics** tab then lists only a few system topics.
 - **Display frame** isn't set (it shows a red warning), or the topics aren't turned on in
   the 3D panel's **Topics** section.
